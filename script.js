@@ -1,7 +1,13 @@
-// ---------- CONFIG DO SEU REPO (fixo) ----------
+// === GitHub fixo (EDITE AQUI) ===
 const GH_USER   = 'matheusglls';
 const GH_REPO   = 'rack-zebrafish';
 const GH_BRANCH = 'main';
+
+// ⚠️ COLE seu Fine-grained PAT (Contents: Read & write no repo acima)
+const GH_TOKEN  = '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';
+
+// Senha que o site exige para salvar (apenas validação no cliente)
+const PASSWORD  = 'bioterioufrgs';
 
 // ---------- Estado ----------
 const STATE_KEY = 'zebraRacks_5x10_v1';
@@ -23,12 +29,12 @@ function save(){ localStorage.setItem(STATE_KEY, JSON.stringify({racks, activeTa
 function load(){
   try{
     const data = JSON.parse(localStorage.getItem(STATE_KEY));
-    if(data?.racks?.length===3) racks = data.racks;
+    if(data?.racks?.length===3){ racks = data.racks; }
     if(Number.isInteger(data?.activeTab)) activeTab = data.activeTab;
   }catch(_){}
 }
 function uid(){ return Math.random().toString(36).slice(2,9); }
-function rowIndexToLabel(r){ return ['A','B','C','D','E'][r] }
+function rowIndexToLabel(r){ return ['A','B','C','D','E'][r]; }
 
 function rcToPx(row, col, w){
   const rect = gridEl.getBoundingClientRect();
@@ -37,7 +43,7 @@ function rcToPx(row, col, w){
   const pad = 8;
 
   const labelW = 40;
-  const innerW = rect.width - pad*2 - gap*(COLS+2) - labelW;
+  const innerW = rect.width - pad*2 - gap*(COLS+2) - labelW; // gaps + label
   const innerH = rect.height - pad*2 - gap*(ROWS+1);
 
   const cw = innerW / COLS;
@@ -105,8 +111,12 @@ function renderGrid(){
 
 // ---------- Adição por clique ----------
 function addTankAt(row, col){
-  const w = placingSize;
-  const tank = { id: uid(), row, col, w, label:'', linhagem:'', idade:null, n:null, notas:'', status:'ok', color:'' };
+  const w = placingSize; // 1,2,7
+  const tank = {
+    id: uid(),
+    row, col, w,
+    label:'', linhagem:'', idade:null, n:null, notas:'', status:'ok', color:''
+  };
   if(!canPlace(activeTab, tank)) return false;
   racks[activeTab].tanks.push(tank);
   save(); renderGrid();
@@ -118,13 +128,17 @@ document.querySelectorAll('.slot').forEach(s=>{
 
 // ---------- Drag & Drop ----------
 function onDragStart(ev){
-  ev.preventDefault(); dragMoved = false;
+  ev.preventDefault();
+  dragMoved = false;
+
   const target = ev.currentTarget;
   const id = target.dataset.id;
   let startX = ('touches' in ev ? ev.touches[0].clientX : ev.clientX);
   let startY = ('touches' in ev ? ev.touches[0].clientY : ev.clientY);
   const rect = target.getBoundingClientRect();
-  const offX = startX - rect.left, offY = startY - rect.top;
+  const offX = startX - rect.left;
+  const offY = startY - rect.top;
+
   drag = { id, offX, offY, startX, startY };
   document.addEventListener('mousemove', onDragMove);
   document.addEventListener('mouseup', onDragEnd);
@@ -133,24 +147,30 @@ function onDragStart(ev){
 }
 function onDragMove(ev){
   ev.preventDefault();
-  if(!drag) return; dragMoved = true;
+  if(!drag) return;
+  dragMoved = true;
+
   const t = racks[activeTab].tanks.find(x=>x.id===drag.id);
   if(!t) return;
+
   const x = ('touches' in ev ? ev.touches[0].clientX : ev.clientX) - drag.offX;
   const y = ('touches' in ev ? ev.touches[0].clientY : ev.clientY) - drag.offY;
 
   let bestRow = t.row, bestCol = t.col, bestOk = false;
+
   for(let r=0;r<ROWS;r++){
     for(let c=0;c<=COLS - t.w;c++){
       const box = rcToPx(r,c,t.w);
-      const inside = (x >= box.left-12 && x <= box.left+box.width+12 && y >= box.top-12 && y <= box.top+box.height+12);
+      const inside = (x >= box.left-12 && x <= box.left+box.width+12 &&
+                      y >= box.top-12  && y <= box.top+box.height+12);
       if(inside){
         const can = canPlace(activeTab, {row:r,col:c,w:t.w}, t.id);
-        if(can){ bestRow=r; bestCol=c; bestOk=true; break; }
+        if(can){ bestRow = r; bestCol = c; bestOk = true; break; }
       }
     }
     if(bestOk) break;
   }
+
   const elTank = document.querySelector(`.tank[data-id="${t.id}"]`);
   if(bestOk){
     const {left, top, width, height} = rcToPx(bestRow, bestCol, t.w);
@@ -158,14 +178,18 @@ function onDragMove(ev){
     Object.assign(elTank.style, { left:left+'px', top:top+'px', width:width+'px', height:height+'px' });
     drag.ok = true; drag.row = bestRow; drag.col = bestCol;
   }else{
-    elTank.classList.add('ghost'); elTank.style.left = x + 'px'; elTank.style.top = y + 'px';
+    elTank.classList.add('ghost');
+    elTank.style.left = x + 'px';
+    elTank.style.top  = y + 'px';
   }
 }
 function onDragEnd(){
   if(!drag) return;
   const t = racks[activeTab].tanks.find(x=>x.id===drag.id);
   const elTank = document.querySelector(`.tank[data-id="${t.id}"]`);
-  if(drag.ok){ t.row = drag.row; t.col = drag.col; save(); }
+  if(drag.ok){
+    t.row = drag.row; t.col = drag.col; save();
+  }
   elTank?.classList.remove('ghost');
   drag = null;
   document.removeEventListener('mousemove', onDragMove);
@@ -240,7 +264,7 @@ async function autoLoadLatestFromGitHub(){
   const listUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/versions?ref=${encodeURIComponent(GH_BRANCH)}`;
   try{
     const res = await fetch(listUrl);
-    if(!res.ok) return; // se pasta não existe ou repo privado, apenas ignore
+    if(!res.ok) return; // pasta não existe ou repo privado → ignora
     const data = await res.json();
     const files = (Array.isArray(data)?data:[])
       .filter(f => f.type==='file' && f.name.endsWith('.json'))
@@ -253,61 +277,70 @@ async function autoLoadLatestFromGitHub(){
     if(!r2.ok) return;
     const json = await r2.json();
     if(Array.isArray(json?.racks)){
-      racks = json.racks;
-      activeTab = 0;
-      $('#rackSelect').value = '0';
+      racks = json.racks; activeTab = 0;
+      document.getElementById('rackSelect').value = '0';
       save(); renderTabs(); renderGrid();
     }
   }catch(e){
-    // silencioso para não atrapalhar o uso offline
-    console.warn('Auto-load GitHub falhou:', e);
+    console.warn('Auto-load falhou:', e);
   }
 }
 
-// ---------- GitHub: SALVAR nova versão (só token) ----------
+// ---------- GitHub: SALVAR nova versão (senha + PAT embutido) ----------
 function timestampName(){
-  const s = new Date().toISOString().replace(/[:T]/g,'-').split('.')[0];
-  return `rack-${s}.json`;
+  const d = new Date();
+  const pad = n => String(n).padStart(2,'0');
+  const ms = String(d.getMilliseconds()).padStart(3,'0');
+  const rand = Math.random().toString(36).slice(2,6);
+  return `rack-${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}-${pad(d.getHours())}-${pad(d.getMinutes())}-${pad(d.getSeconds())}-${ms}-${rand}.json`;
 }
-async function ghCreateVersionFile(){
-  const token = $('#ghToken').value.trim();
-  if(!token){ alert('Cole o seu token (PAT) do GitHub.'); return; }
+async function saveWithPassword(){
+  const pwd = document.getElementById('pwd').value.trim();
+  if(pwd !== PASSWORD){ alert('Senha incorreta.'); return; }
 
   const json = JSON.stringify({ racks }, null, 2);
   const contentB64 = btoa(unescape(encodeURIComponent(json)));
   const path = `versions/${timestampName()}`;
-
-  const url = `https://api.github.com/repos/${encodeURIComponent(GH_USER)}/${encodeURIComponent(GH_REPO)}/contents/${encodeURIComponent(path)}`;
-  const body = { message:`feat: add version via site (${path})`, content:contentB64, branch:GH_BRANCH };
+  const url  = `https://api.github.com/repos/${encodeURIComponent(GH_USER)}/${encodeURIComponent(GH_REPO)}/contents/${encodeURIComponent(path)}`;
 
   try{
     const res = await fetch(url, {
       method:'PUT',
       headers:{
-        'Authorization': `Bearer ${token}`,
+        'Authorization': `Bearer ${GH_TOKEN}`,
         'Accept': 'application/vnd.github+json'
       },
-      body: JSON.stringify(body)
+      body: JSON.stringify({
+        message: `feat: add version via site (${path})`,
+        content: contentB64,
+        branch: GH_BRANCH
+      })
     });
+
     if(!res.ok){
-      const t = await res.text();
-      console.error('GitHub error:', t);
-      alert('Falha ao salvar no GitHub. Verifique o token e permissões (Contents: Read & write).');
+      const txt = await res.text();
+      console.error('GitHub error:', res.status, txt);
+      if(res.status === 401) alert('401: Token inválido/expirado.');
+      else if(res.status === 403) alert('403: Token sem permissão ou branch protegida.');
+      else if(res.status === 404) alert('404: Repo/branch não encontrado ou token sem acesso.');
+      else if(res.status === 422) alert('422: Conflito de nome (clique de novo) ou conteúdo inválido.');
+      else alert(`Falha ao salvar (${res.status}). Veja console.`);
       return;
     }
+
     const data = await res.json();
     alert(`Versão criada!\n${data.content.path}`);
   }catch(e){
     console.error(e);
-    alert('Erro de rede ao salvar no GitHub.');
+    alert('Erro de rede ao salvar (ver console).');
   }
 }
-$('#ghSaveNewBtn').addEventListener('click', ghCreateVersionFile);
+document.getElementById('saveBtn').addEventListener('click', saveWithPassword);
 
 // ---------- Init ----------
 load();
 renderTabs();
-$('#rackSelect').value = String(activeTab);
+document.getElementById('rackSelect').value = String(activeTab);
 window.addEventListener('resize', renderGrid);
 renderGrid();
-autoLoadLatestFromGitHub(); // carrega sempre a versão mais recente ao abrir
+autoLoadLatestFromGitHub();
