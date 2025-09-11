@@ -30,21 +30,21 @@
     </select>
 
     <p class="help">
-      Dica: escolha o tamanho e <b>clique em um slot</b> da rack para adicionar.
-      <br>Arraste para mover. Clique no aquário para editar dados.
+      Dica: escolha o tamanho e <b>clique</b> em um slot da rack para adicionar.
+      Arraste para mover. Clique no aquário para editar dados.
     </p>
 
     <hr>
 
-    <!-- ===== Salvar no GitHub (apenas token) ===== -->
+    <!-- ===== Salvar no GitHub (senha + PAT no código) ===== -->
     <h2>Salvar na nuvem (GitHub)</h2>
-    <p class="help">Cria <code>versions/rack-AAAA-MM-DD-HH-MM-SS.json</code> no repositório <b>matheusglls/rack-zebrafish</b> (branch <b>main</b>).</p>
+    <p class="help">Repo: <b>matheusglls/rack-zebrafish</b> • Branch: <b>main</b></p>
 
-    <label for="ghToken">Token (PAT)</label>
-    <input id="ghToken" type="password" placeholder="cole aqui seu token..." />
+    <label for="pwd">Senha</label>
+    <input id="pwd" type="password" placeholder="digite a senha…" />
 
     <div class="row">
-      <button id="ghSaveNewBtn">Salvar NOVA versão</button>
+      <button id="saveBtn">Salvar NOVA versão</button>
     </div>
 
     <hr>
@@ -54,7 +54,7 @@
       <button id="resetBtn" class="danger">Zerar tudo</button>
     </div>
 
-    <p class="footer-note">O site carrega automaticamente a <b>última versão</b> do GitHub ao abrir.</p>
+    <p class="footer-note">Ao abrir, o site carrega automaticamente a <b>última versão</b> do GitHub.</p>
   </aside>
 
   <main class="rack-wrap">
@@ -168,4 +168,3 @@
 <script src="script.js"></script>
 </body>
 </html>
-
