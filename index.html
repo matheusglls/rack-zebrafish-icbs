@@ -36,60 +36,25 @@
 
     <hr>
 
-    <h2>Dados / Backup</h2>
-    <div class="row">
-      <button id="exportBtn">Exportar JSON</button>
-      <button id="importBtn">Importar JSON</button>
-      <button id="resetBtn" class="danger">Zerar</button>
-    </div>
-    <div class="row">
-      <button id="downloadBtn">Baixar .json</button>
-    </div>
-    <textarea id="jsonArea" rows="6" placeholder="Cole/veja o JSON aqui…"></textarea>
+    <!-- ===== Salvar no GitHub (apenas token) ===== -->
+    <h2>Salvar na nuvem (GitHub)</h2>
+    <p class="help">Cria <code>versions/rack-AAAA-MM-DD-HH-MM-SS.json</code> no repositório <b>matheusglls/rack-zebrafish</b> (branch <b>main</b>).</p>
 
-    <p class="footer-note">Salva automaticamente no navegador (localStorage).</p>
-
-    <hr>
-
-    <!-- ===== Versões no GitHub (listar/carregar) ===== -->
-    <h2>Versões (GitHub)</h2>
-
-    <label for="ghUser">GitHub user</label>
-    <input id="ghUser" type="text" placeholder="ex: seu-usuario" />
-
-    <label for="ghRepo">Repositório</label>
-    <input id="ghRepo" type="text" placeholder="ex: rack-zebrafish" />
-
-    <label for="ghBranch">Branch</label>
-    <input id="ghBranch" type="text" value="main" />
-
-    <div class="row">
-      <button id="ghListBtn">Listar versões</button>
-    </div>
-    <div class="row">
-      <select id="ghSelect" aria-label="Selecionar versão do GitHub"></select>
-      <button id="ghLoadBtn">Carregar</button>
-    </div>
-    <p class="help">As versões são arquivos .json na pasta <code>versions/</code> do repositório.</p>
-
-    <hr>
-
-    <!-- ===== Salvar no GitHub (1 clique, com PAT) ===== -->
-    <h2>Salvar no GitHub (1 clique)</h2>
-    <p class="help">Cria <code>versions/rack-AAAA-MM-DD-HH-MM-SS.json</code> no repositório.</p>
-
-    <label for="ghToken">Token (PAT) — não é salvo no código</label>
+    <label for="ghToken">Token (PAT)</label>
     <input id="ghToken" type="password" placeholder="cole aqui seu token..." />
-
-    <div class="row">
-      <label style="display:flex;gap:6px;align-items:center">
-        <input type="checkbox" id="rememberToken"> lembrar token neste navegador
-      </label>
-    </div>
 
     <div class="row">
       <button id="ghSaveNewBtn">Salvar NOVA versão</button>
     </div>
+
+    <hr>
+
+    <!-- ===== Zerar tudo ===== -->
+    <div class="row">
+      <button id="resetBtn" class="danger">Zerar tudo</button>
+    </div>
+
+    <p class="footer-note">O site carrega automaticamente a <b>última versão</b> do GitHub ao abrir.</p>
   </aside>
 
   <main class="rack-wrap">
@@ -183,38 +148,15 @@
   <div class="card" role="dialog" aria-modal="true" aria-labelledby="dlgTitle">
     <h3 id="dlgTitle">Editar aquário</h3>
     <div class="grid-info">
-      <div>
-        <label>ID / Label</label>
-        <input id="f_label" type="text" placeholder="ex: A12" />
+      <div><label>ID / Label</label><input id="f_label" type="text" placeholder="ex: A12" /></div>
+      <div><label>Linhagem</label><input id="f_linhagem" type="text" placeholder="ex: AB/TL" /></div>
+      <div><label>Idade (dpf)</label><input id="f_idade" type="number" min="0" step="1" /></div>
+      <div><label># peixes</label><input id="f_n" type="number" min="0" step="1" /></div>
+      <div style="grid-column:1/-1"><label>Notas</label><input id="f_notas" type="text" placeholder="Observações…" /></div>
+      <div><label>Status</label>
+        <select id="f_status"><option value="ok">OK</option><option value="quarentena">Quarentena</option><option value="manutenção">Manutenção</option></select>
       </div>
-      <div>
-        <label>Linhagem</label>
-        <input id="f_linhagem" type="text" placeholder="ex: AB/TL" />
-      </div>
-      <div>
-        <label>Idade (dpf)</label>
-        <input id="f_idade" type="number" min="0" step="1" />
-      </div>
-      <div>
-        <label># peixes</label>
-        <input id="f_n" type="number" min="0" step="1" />
-      </div>
-      <div style="grid-column:1/-1">
-        <label>Notas</label>
-        <input id="f_notas" type="text" placeholder="Observações…" />
-      </div>
-      <div>
-        <label>Status</label>
-        <select id="f_status">
-          <option value="ok">OK</option>
-          <option value="quarentena">Quarentena</option>
-          <option value="manutenção">Manutenção</option>
-        </select>
-      </div>
-      <div>
-        <label>Cor (opcional)</label>
-        <input id="f_cor" type="color" />
-      </div>
+      <div><label>Cor (opcional)</label><input id="f_cor" type="color" /></div>
     </div>
     <div class="right-actions">
       <button id="deleteBtn" class="danger">Remover</button>
@@ -226,3 +168,4 @@
 <script src="script.js"></script>
 </body>
 </html>
+
