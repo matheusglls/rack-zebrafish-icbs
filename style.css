@@ -68,7 +68,6 @@ button:active{transform:translateY(1px)}
 .tank[data-size="7"]{background-color:var(--l)}
 .tank .meta{font-size:12px}
 .tank .badge{font-weight:700;font-size:11px;padding:2px 8px;background:#0000003a;border:1px solid #0000004d;border-radius:999px}
-
 .ghost{opacity:.6;outline:2px dashed var(--accent)}
 
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;padding:16px;z-index:20}
@@ -77,3 +76,7 @@ button:active{transform:translateY(1px)}
 .card h3{margin:0 0 10px}
 .grid-info{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .right-actions{margin-top:10px;display:flex;gap:8px;justify-content:flex-end}
+
+#versionsList { list-style: none; padding-left: 0; }
+#versionsList li { margin: 4px 0; }
+#versionsList button { width: auto; }
