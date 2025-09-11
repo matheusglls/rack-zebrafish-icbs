@@ -11,7 +11,7 @@ h1{font-size:18px;margin:0}
 .left{width:300px;background:var(--panel);border:1px solid #1e2633;border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:12px}
 .left h2{margin:0 0 4px;font-size:15px}
 label{display:block;font-size:12px;color:var(--muted);margin:8px 0 4px}
-select,input,textarea,button{width:100%;padding:10px 12px;background:#0e131b;color:var(--text);border:1px solid #253044;border-radius:10px;outline:none}
+select,input,button{width:100%;padding:10px 12px;background:#0e131b;color:var(--text);border:1px solid #253044;border-radius:10px;outline:none}
 button{cursor:pointer;transition:.2s border,.2s transform}
 button:hover{border-color:#3a4b68}
 button:active{transform:translateY(1px)}
@@ -31,7 +31,7 @@ button:active{transform:translateY(1px)}
 .grid{
   --rows:5; --cols:10;
   display:grid;
-  grid-template-columns: 40px repeat(var(--cols), 1fr); /* coluna 1 = labels A–E */
+  grid-template-columns: 40px repeat(var(--cols), 1fr);
   grid-template-rows: repeat(var(--rows), 1fr);
   gap:6px;
   border:1px dashed var(--grid);
@@ -55,7 +55,7 @@ button:active{transform:translateY(1px)}
 
 .tank{
   position:absolute;
-  height: calc((100% - 6px*(var(--rows)+1)) / var(--rows)); /* altura 1 linha */
+  height: calc((100% - 6px*(var(--rows)+1)) / var(--rows));
   display:flex;align-items:center;justify-content:space-between;gap:8px;
   padding:6px 8px;border-radius:10px;border:2px solid #314664;
   color:white; user-select:none; cursor:grab;
@@ -76,7 +76,3 @@ button:active{transform:translateY(1px)}
 .card h3{margin:0 0 10px}
 .grid-info{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .right-actions{margin-top:10px;display:flex;gap:8px;justify-content:flex-end}
-
-#versionsList { list-style: none; padding-left: 0; }
-#versionsList li { margin: 4px 0; }
-#versionsList button { width: auto; }
