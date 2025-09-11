@@ -1,0 +1,107 @@
+{
+  "racks": [
+    {
+      "tanks": [
+        {
+          "id": "hwtym4c",
+          "row": 2,
+          "col": 2,
+          "w": 7,
+          "label": "",
+          "linhagem": "",
+          "idade": null,
+          "n": null,
+          "notas": "",
+          "status": "ok",
+          "color": ""
+        },
+        {
+          "id": "yiwp542",
+          "row": 3,
+          "col": 1,
+          "w": 7,
+          "label": "",
+          "linhagem": "",
+          "idade": null,
+          "n": null,
+          "notas": "",
+          "status": "ok",
+          "color": ""
+        }
+      ]
+    },
+    {
+      "tanks": [
+        {
+          "id": "ggd8ea9",
+          "row": 2,
+          "col": 1,
+          "w": 7,
+          "label": "",
+          "linhagem": "",
+          "idade": null,
+          "n": null,
+          "notas": "",
+          "status": "ok",
+          "color": ""
+        }
+      ]
+    },
+    {
+      "tanks": [
+        {
+          "id": "pnb2vnr",
+          "row": 0,
+          "col": 3,
+          "w": 7,
+          "label": "",
+          "linhagem": "",
+          "idade": null,
+          "n": null,
+          "notas": "",
+          "status": "ok",
+          "color": ""
+        },
+        {
+          "id": "gz60pt6",
+          "row": 2,
+          "col": 2,
+          "w": 7,
+          "label": "",
+          "linhagem": "",
+          "idade": null,
+          "n": null,
+          "notas": "",
+          "status": "ok",
+          "color": ""
+        },
+        {
+          "id": "h4re2vi",
+          "row": 3,
+          "col": 2,
+          "w": 7,
+          "label": "",
+          "linhagem": "",
+          "idade": null,
+          "n": null,
+          "notas": "",
+          "status": "ok",
+          "color": ""
+        },
+        {
+          "id": "lds6xm2",
+          "row": 4,
+          "col": 2,
+          "w": 7,
+          "label": "",
+          "linhagem": "",
+          "idade": null,
+          "n": null,
+          "notas": "",
+          "status": "ok",
+          "color": ""
+        }
+      ]
+    }
+  ]
+}
