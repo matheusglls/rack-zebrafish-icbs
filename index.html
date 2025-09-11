@@ -40,11 +40,56 @@
     <div class="row">
       <button id="exportBtn">Exportar JSON</button>
       <button id="importBtn">Importar JSON</button>
-      <button id="resetBtn" class="danger">Zerar tudo</button>
+      <button id="resetBtn" class="danger">Zerar</button>
+    </div>
+    <div class="row">
+      <button id="downloadBtn">Baixar .json</button>
     </div>
     <textarea id="jsonArea" rows="6" placeholder="Cole/veja o JSON aqui…"></textarea>
 
     <p class="footer-note">Salva automaticamente no navegador (localStorage).</p>
+
+    <hr>
+
+    <!-- ===== Versões no GitHub (listar/carregar) ===== -->
+    <h2>Versões (GitHub)</h2>
+
+    <label for="ghUser">GitHub user</label>
+    <input id="ghUser" type="text" placeholder="ex: seu-usuario" />
+
+    <label for="ghRepo">Repositório</label>
+    <input id="ghRepo" type="text" placeholder="ex: rack-zebrafish" />
+
+    <label for="ghBranch">Branch</label>
+    <input id="ghBranch" type="text" value="main" />
+
+    <div class="row">
+      <button id="ghListBtn">Listar versões</button>
+    </div>
+    <div class="row">
+      <select id="ghSelect" aria-label="Selecionar versão do GitHub"></select>
+      <button id="ghLoadBtn">Carregar</button>
+    </div>
+    <p class="help">As versões são arquivos .json na pasta <code>versions/</code> do repositório.</p>
+
+    <hr>
+
+    <!-- ===== Salvar no GitHub (1 clique, com PAT) ===== -->
+    <h2>Salvar no GitHub (1 clique)</h2>
+    <p class="help">Cria <code>versions/rack-AAAA-MM-DD-HH-MM-SS.json</code> no repositório.</p>
+
+    <label for="ghToken">Token (PAT) — não é salvo no código</label>
+    <input id="ghToken" type="password" placeholder="cole aqui seu token..." />
+
+    <div class="row">
+      <label style="display:flex;gap:6px;align-items:center">
+        <input type="checkbox" id="rememberToken"> lembrar token neste navegador
+      </label>
+    </div>
+
+    <div class="row">
+      <button id="ghSaveNewBtn">Salvar NOVA versão</button>
+    </div>
   </aside>
 
   <main class="rack-wrap">
@@ -70,8 +115,7 @@
       <div class="rowLabel" style="grid-row:4;grid-column:1">D</div>
       <div class="rowLabel" style="grid-row:5;grid-column:1">E</div>
 
-      <!-- slots vazios (clicáveis) são colunas 2..11; 10 por linha -->
-      <!-- A -->
+      <!-- slots A -->
       <div class="slot" data-row="0" data-col="0" style="grid-row:1;grid-column:2"></div>
       <div class="slot" data-row="0" data-col="1" style="grid-row:1;grid-column:3"></div>
       <div class="slot" data-row="0" data-col="2" style="grid-row:1;grid-column:4"></div>
@@ -83,7 +127,7 @@
       <div class="slot" data-row="0" data-col="8" style="grid-row:1;grid-column:10"></div>
       <div class="slot" data-row="0" data-col="9" style="grid-row:1;grid-column:11"></div>
 
-      <!-- B -->
+      <!-- slots B -->
       <div class="slot" data-row="1" data-col="0" style="grid-row:2;grid-column:2"></div>
       <div class="slot" data-row="1" data-col="1" style="grid-row:2;grid-column:3"></div>
       <div class="slot" data-row="1" data-col="2" style="grid-row:2;grid-column:4"></div>
@@ -95,7 +139,7 @@
       <div class="slot" data-row="1" data-col="8" style="grid-row:2;grid-column:10"></div>
       <div class="slot" data-row="1" data-col="9" style="grid-row:2;grid-column:11"></div>
 
-      <!-- C -->
+      <!-- slots C -->
       <div class="slot" data-row="2" data-col="0" style="grid-row:3;grid-column:2"></div>
       <div class="slot" data-row="2" data-col="1" style="grid-row:3;grid-column:3"></div>
       <div class="slot" data-row="2" data-col="2" style="grid-row:3;grid-column:4"></div>
@@ -107,7 +151,7 @@
       <div class="slot" data-row="2" data-col="8" style="grid-row:3;grid-column:10"></div>
       <div class="slot" data-row="2" data-col="9" style="grid-row:3;grid-column:11"></div>
 
-      <!-- D -->
+      <!-- slots D -->
       <div class="slot" data-row="3" data-col="0" style="grid-row:4;grid-column:2"></div>
       <div class="slot" data-row="3" data-col="1" style="grid-row:4;grid-column:3"></div>
       <div class="slot" data-row="3" data-col="2" style="grid-row:4;grid-column:4"></div>
@@ -119,7 +163,7 @@
       <div class="slot" data-row="3" data-col="8" style="grid-row:4;grid-column:10"></div>
       <div class="slot" data-row="3" data-col="9" style="grid-row:4;grid-column:11"></div>
 
-      <!-- E -->
+      <!-- slots E -->
       <div class="slot" data-row="4" data-col="0" style="grid-row:5;grid-column:2"></div>
       <div class="slot" data-row="4" data-col="1" style="grid-row:5;grid-column:3"></div>
       <div class="slot" data-row="4" data-col="2" style="grid-row:5;grid-column:4"></div>
