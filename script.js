@@ -1,13 +1,6 @@
-// === GitHub fixo (EDITE AQUI) ===
-const GH_USER   = 'matheusglls';
-const GH_REPO   = 'rack-zebrafish';
-const GH_BRANCH = 'main';
-
-// ⚠️ COLE seu Fine-grained PAT (Contents: Read & write no repo acima)
-const GH_TOKEN  = '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';
-
-// Senha que o site exige para salvar (apenas validação no cliente)
-const PASSWORD  = 'bioterioufrgs';
+// ======= CONFIGURE AQUI =======
+const WORKER_URL = 'https://rack-saver.matheusgallasl.workers.dev'; // 
+// ==============================
 
 // ---------- Estado ----------
 const STATE_KEY = 'zebraRacks_5x10_v1';
@@ -43,7 +36,7 @@ function rcToPx(row, col, w){
   const pad = 8;
 
   const labelW = 40;
-  const innerW = rect.width - pad*2 - gap*(COLS+2) - labelW; // gaps + label
+  const innerW = rect.width - pad*2 - gap*(COLS+2) - labelW;
   const innerH = rect.height - pad*2 - gap*(ROWS+1);
 
   const cw = innerW / COLS;
@@ -111,12 +104,8 @@ function renderGrid(){
 
 // ---------- Adição por clique ----------
 function addTankAt(row, col){
-  const w = placingSize; // 1,2,7
-  const tank = {
-    id: uid(),
-    row, col, w,
-    label:'', linhagem:'', idade:null, n:null, notas:'', status:'ok', color:''
-  };
+  const w = placingSize;
+  const tank = { id: uid(), row, col, w, label:'', linhagem:'', idade:null, n:null, notas:'', status:'ok', color:'' };
   if(!canPlace(activeTab, tank)) return false;
   racks[activeTab].tanks.push(tank);
   save(); renderGrid();
@@ -259,80 +248,41 @@ $('#resetBtn').addEventListener('click', ()=>{
   }
 });
 
-// ---------- GitHub: carregar AUTOMÁTICO a última versão ----------
-async function autoLoadLatestFromGitHub(){
-  const listUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/versions?ref=${encodeURIComponent(GH_BRANCH)}`;
+// ---------- Backend: carregar AUTOMÁTICO a última versão ----------
+async function autoLoadLatest(){
   try{
-    const res = await fetch(listUrl);
-    if(!res.ok) return; // pasta não existe ou repo privado → ignora
-    const data = await res.json();
-    const files = (Array.isArray(data)?data:[])
-      .filter(f => f.type==='file' && f.name.endsWith('.json'))
-      .sort((a,b)=> b.name.localeCompare(a.name)); // nomes com timestamp desc
-    if(!files.length) return;
-
-    const fname = files[0].name;
-    const rawUrl = `https://raw.githubusercontent.com/${GH_USER}/${GH_REPO}/${encodeURIComponent(GH_BRANCH)}/versions/${fname}`;
-    const r2 = await fetch(rawUrl, { cache: 'no-store' });
-    if(!r2.ok) return;
-    const json = await r2.json();
-    if(Array.isArray(json?.racks)){
-      racks = json.racks; activeTab = 0;
+    const r = await fetch(`${WORKER_URL}/latest`);
+    const j = await r.json();
+    if(j?.ok && Array.isArray(j.data?.racks)){
+      racks = j.data.racks; activeTab = 0;
       document.getElementById('rackSelect').value = '0';
       save(); renderTabs(); renderGrid();
     }
   }catch(e){
-    console.warn('Auto-load falhou:', e);
+    console.warn('Auto-load falhou', e);
   }
 }
 
-// ---------- GitHub: SALVAR nova versão (senha + PAT embutido) ----------
-function timestampName(){
-  const d = new Date();
-  const pad = n => String(n).padStart(2,'0');
-  const ms = String(d.getMilliseconds()).padStart(3,'0');
-  const rand = Math.random().toString(36).slice(2,6);
-  return `rack-${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}-${pad(d.getHours())}-${pad(d.getMinutes())}-${pad(d.getSeconds())}-${ms}-${rand}.json`;
-}
+// ---------- Backend: salvar com senha ----------
 async function saveWithPassword(){
-  const pwd = document.getElementById('pwd').value.trim();
-  if(pwd !== PASSWORD){ alert('Senha incorreta.'); return; }
-
-  const json = JSON.stringify({ racks }, null, 2);
-  const contentB64 = btoa(unescape(encodeURIComponent(json)));
-  const path = `versions/${timestampName()}`;
-  const url  = `https://api.github.com/repos/${encodeURIComponent(GH_USER)}/${encodeURIComponent(GH_REPO)}/contents/${encodeURIComponent(path)}`;
-
+  const password = document.getElementById('pwd').value.trim();
+  if(!password){ alert('Digite a senha.'); return; }
   try{
-    const res = await fetch(url, {
-      method:'PUT',
-      headers:{
-        'Authorization': `Bearer ${GH_TOKEN}`,
-        'Accept': 'application/vnd.github+json'
-      },
-      body: JSON.stringify({
-        message: `feat: add version via site (${path})`,
-        content: contentB64,
-        branch: GH_BRANCH
-      })
+    const r = await fetch(`${WORKER_URL}/save`, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ password, racks })
     });
-
-    if(!res.ok){
-      const txt = await res.text();
-      console.error('GitHub error:', res.status, txt);
-      if(res.status === 401) alert('401: Token inválido/expirado.');
-      else if(res.status === 403) alert('403: Token sem permissão ou branch protegida.');
-      else if(res.status === 404) alert('404: Repo/branch não encontrado ou token sem acesso.');
-      else if(res.status === 422) alert('422: Conflito de nome (clique de novo) ou conteúdo inválido.');
-      else alert(`Falha ao salvar (${res.status}). Veja console.`);
+    const j = await r.json();
+    if(!r.ok || !j?.ok){
+      if(r.status===401 || j?.error==='unauthorized') alert('Senha incorreta.');
+      else alert('Falha ao salvar. Veja console.');
+      console.error('save error', r.status, j);
       return;
     }
-
-    const data = await res.json();
-    alert(`Versão criada!\n${data.content.path}`);
+    alert('Versão salva na nuvem!');
   }catch(e){
-    console.error(e);
-    alert('Erro de rede ao salvar (ver console).');
+    console.error(e); alert('Erro de rede ao salvar.');
   }
 }
 document.getElementById('saveBtn').addEventListener('click', saveWithPassword);
@@ -343,4 +293,4 @@ renderTabs();
 document.getElementById('rackSelect').value = String(activeTab);
 window.addEventListener('resize', renderGrid);
 renderGrid();
-autoLoadLatestFromGitHub();
+autoLoadLatest();
