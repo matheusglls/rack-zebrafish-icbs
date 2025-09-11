@@ -1,17 +1,19 @@
+// ---------- CONFIG DO SEU REPO (fixo) ----------
+const GH_USER   = 'matheusglls';
+const GH_REPO   = 'rack-zebrafish';
+const GH_BRANCH = 'main';
+
 // ---------- Estado ----------
 const STATE_KEY = 'zebraRacks_5x10_v1';
-// 3 racks, cada um: 5 linhas (A–E), 10 colunas; tanques ocupam 1 linha x (1|2|7) colunas
-let racks = [
-  { tanks: [] }, { tanks: [] }, { tanks: [] }
-];
-let activeTab = 0;        // 0,1,2
-let placingSize = 1;      // 1,2,7
-let drag = null;          // {id, startX, startY, offX, offY}
+let racks = [ { tanks: [] }, { tanks: [] }, { tanks: [] } ];
+let activeTab = 0;
+let placingSize = 1;
+let drag = null;
 let dragMoved = false;
 let editingId = null;
 
-const ROWS = 5;           // A..E
-const COLS = 10;          // 10 slots por nível
+const ROWS = 5;  // A..E
+const COLS = 10; // 10 slots
 
 // ---------- Util ----------
 const $ = s => document.querySelector(s);
@@ -21,7 +23,7 @@ function save(){ localStorage.setItem(STATE_KEY, JSON.stringify({racks, activeTa
 function load(){
   try{
     const data = JSON.parse(localStorage.getItem(STATE_KEY));
-    if(data?.racks?.length===3){ racks = data.racks; }
+    if(data?.racks?.length===3) racks = data.racks;
     if(Number.isInteger(data?.activeTab)) activeTab = data.activeTab;
   }catch(_){}
 }
@@ -35,7 +37,7 @@ function rcToPx(row, col, w){
   const pad = 8;
 
   const labelW = 40;
-  const innerW = rect.width - pad*2 - gap*(COLS+2) - labelW; // gaps + label
+  const innerW = rect.width - pad*2 - gap*(COLS+2) - labelW;
   const innerH = rect.height - pad*2 - gap*(ROWS+1);
 
   const cw = innerW / COLS;
@@ -54,10 +56,9 @@ function canPlace(tabIndex, tank, excludeId=null){
   if(tank.row < 0 || tank.row >= ROWS) return false;
   if(tank.col < 0) return false;
   if(tank.col + tank.w > COLS) return false;
-
   for(const t of racks[tabIndex].tanks){
     if(t.id === excludeId) continue;
-    if(t.row !== tank.row) continue; // mesma linha
+    if(t.row !== tank.row) continue;
     const sep = (tank.col + tank.w <= t.col) || (t.col + t.w <= tank.col);
     if(!sep) return false;
   }
@@ -83,9 +84,7 @@ function renderGrid(){
     if(t.color) div.style.backgroundColor = t.color;
 
     const {left, top, width, height} = rcToPx(t.row, t.col, t.w);
-    Object.assign(div.style, {
-      left: left + 'px', top: top + 'px', width: width + 'px', height: height + 'px'
-    });
+    Object.assign(div.style, { left:left+'px', top:top+'px', width:width+'px', height:height+'px' });
 
     div.innerHTML = `
       <div class="meta">
@@ -106,36 +105,26 @@ function renderGrid(){
 
 // ---------- Adição por clique ----------
 function addTankAt(row, col){
-  const w = placingSize; // 1,2,7
-  const tank = {
-    id: uid(),
-    row, col, w,
-    label:'', linhagem:'', idade:null, n:null, notas:'', status:'ok', color:''
-  };
+  const w = placingSize;
+  const tank = { id: uid(), row, col, w, label:'', linhagem:'', idade:null, n:null, notas:'', status:'ok', color:'' };
   if(!canPlace(activeTab, tank)) return false;
   racks[activeTab].tanks.push(tank);
   save(); renderGrid();
   return true;
 }
 document.querySelectorAll('.slot').forEach(s=>{
-  s.addEventListener('click', ()=>{
-    addTankAt(Number(s.dataset.row), Number(s.dataset.col));
-  });
+  s.addEventListener('click', ()=> addTankAt(Number(s.dataset.row), Number(s.dataset.col)));
 });
 
 // ---------- Drag & Drop ----------
 function onDragStart(ev){
-  ev.preventDefault();
-  dragMoved = false;
-
+  ev.preventDefault(); dragMoved = false;
   const target = ev.currentTarget;
   const id = target.dataset.id;
   let startX = ('touches' in ev ? ev.touches[0].clientX : ev.clientX);
   let startY = ('touches' in ev ? ev.touches[0].clientY : ev.clientY);
   const rect = target.getBoundingClientRect();
-  const offX = startX - rect.left;
-  const offY = startY - rect.top;
-
+  const offX = startX - rect.left, offY = startY - rect.top;
   drag = { id, offX, offY, startX, startY };
   document.addEventListener('mousemove', onDragMove);
   document.addEventListener('mouseup', onDragEnd);
@@ -144,30 +133,24 @@ function onDragStart(ev){
 }
 function onDragMove(ev){
   ev.preventDefault();
-  if(!drag) return;
-  dragMoved = true;
-
+  if(!drag) return; dragMoved = true;
   const t = racks[activeTab].tanks.find(x=>x.id===drag.id);
   if(!t) return;
-
   const x = ('touches' in ev ? ev.touches[0].clientX : ev.clientX) - drag.offX;
   const y = ('touches' in ev ? ev.touches[0].clientY : ev.clientY) - drag.offY;
 
   let bestRow = t.row, bestCol = t.col, bestOk = false;
-
   for(let r=0;r<ROWS;r++){
     for(let c=0;c<=COLS - t.w;c++){
       const box = rcToPx(r,c,t.w);
-      const inside = (x >= box.left-12 && x <= box.left+box.width+12 &&
-                      y >= box.top-12  && y <= box.top+box.height+12);
+      const inside = (x >= box.left-12 && x <= box.left+box.width+12 && y >= box.top-12 && y <= box.top+box.height+12);
       if(inside){
         const can = canPlace(activeTab, {row:r,col:c,w:t.w}, t.id);
-        if(can){ bestRow = r; bestCol = c; bestOk = true; break; }
+        if(can){ bestRow=r; bestCol=c; bestOk=true; break; }
       }
     }
     if(bestOk) break;
   }
-
   const elTank = document.querySelector(`.tank[data-id="${t.id}"]`);
   if(bestOk){
     const {left, top, width, height} = rcToPx(bestRow, bestCol, t.w);
@@ -175,18 +158,14 @@ function onDragMove(ev){
     Object.assign(elTank.style, { left:left+'px', top:top+'px', width:width+'px', height:height+'px' });
     drag.ok = true; drag.row = bestRow; drag.col = bestCol;
   }else{
-    elTank.classList.add('ghost');
-    elTank.style.left = x + 'px';
-    elTank.style.top  = y + 'px';
+    elTank.classList.add('ghost'); elTank.style.left = x + 'px'; elTank.style.top = y + 'px';
   }
 }
 function onDragEnd(){
   if(!drag) return;
   const t = racks[activeTab].tanks.find(x=>x.id===drag.id);
   const elTank = document.querySelector(`.tank[data-id="${t.id}"]`);
-  if(drag.ok){
-    t.row = drag.row; t.col = drag.col; save();
-  }
+  if(drag.ok){ t.row = drag.row; t.col = drag.col; save(); }
   elTank?.classList.remove('ghost');
   drag = null;
   document.removeEventListener('mousemove', onDragMove);
@@ -234,7 +213,7 @@ $('#deleteBtn').addEventListener('click', ()=>{
   closeEditor(false); save(); renderGrid();
 });
 
-// ---------- Controles ----------
+// ---------- UI controles ----------
 document.querySelectorAll('.tab').forEach(t=>{
   t.addEventListener('click', ()=>{
     activeTab = Number(t.dataset.tab);
@@ -248,23 +227,6 @@ $('#rackSelect').addEventListener('change', e=>{
   save(); renderGrid();
 });
 $('#size').addEventListener('change', e=> placingSize = Number(e.target.value));
-
-$('#exportBtn').addEventListener('click', ()=>{
-  $('#jsonArea').value = JSON.stringify({racks}, null, 2);
-});
-$('#importBtn').addEventListener('click', ()=>{
-  try{
-    const data = JSON.parse($('#jsonArea').value);
-    if(data && Array.isArray(data.racks) && data.racks.length===3){
-      racks = data.racks; activeTab = 0;
-      $('#rackSelect').value = '0';
-      save(); renderTabs(); renderGrid();
-      alert('Importado com sucesso!');
-    }else{
-      alert('JSON inválido.');
-    }
-  }catch(e){ alert('Erro ao ler JSON.'); }
-});
 $('#resetBtn').addEventListener('click', ()=>{
   if(confirm('Tem certeza que deseja apagar tudo?')){
     racks = [{tanks:[]},{tanks:[]},{tanks:[]}];
@@ -273,148 +235,55 @@ $('#resetBtn').addEventListener('click', ()=>{
   }
 });
 
-// Baixar .json (para subir manualmente em versions/)
-document.getElementById('downloadBtn').addEventListener('click', ()=>{
-  const stamp = new Date().toISOString().replace(/[:T]/g,'-').split('.')[0]; // 2025-09-11-14-35-22
-  const fname = `rack-${stamp}.json`;
-  const blob = new Blob([JSON.stringify({racks}, null, 2)], {type:'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = fname;
-  document.body.appendChild(a); a.click(); a.remove();
-  URL.revokeObjectURL(url);
-});
-
-// ---------- GitHub: preferências (user/repo/branch/token) ----------
-const ghUserEl = document.getElementById('ghUser');
-const ghRepoEl = document.getElementById('ghRepo');
-const ghBranchEl = document.getElementById('ghBranch');
-const ghTokenEl = document.getElementById('ghToken');
-const rememberEl = document.getElementById('rememberToken');
-
-ghUserEl.value   = localStorage.getItem('gh_user')   || ghUserEl.value || '';
-ghRepoEl.value   = localStorage.getItem('gh_repo')   || ghRepoEl.value || '';
-ghBranchEl.value = localStorage.getItem('gh_branch') || ghBranchEl.value || 'main';
-if(localStorage.getItem('gh_token')){
-  ghTokenEl.value = localStorage.getItem('gh_token');
-  rememberEl.checked = true;
-}
-[ghUserEl, ghRepoEl, ghBranchEl].forEach(el=>{
-  el.addEventListener('change', ()=>{
-    localStorage.setItem('gh_user', ghUserEl.value.trim());
-    localStorage.setItem('gh_repo', ghRepoEl.value.trim());
-    localStorage.setItem('gh_branch', ghBranchEl.value.trim());
-  });
-});
-rememberEl.addEventListener('change', ()=>{
-  if(rememberEl.checked){
-    localStorage.setItem('gh_token', ghTokenEl.value);
-  }else{
-    localStorage.removeItem('gh_token');
-  }
-});
-ghTokenEl.addEventListener('input', ()=>{
-  if(rememberEl.checked){
-    localStorage.setItem('gh_token', ghTokenEl.value);
-  }
-});
-
-// ---------- GitHub: LISTAR versões (público) ----------
-async function ghListVersions() {
-  const user   = ghUserEl.value.trim();
-  const repo   = ghRepoEl.value.trim();
-  const branch = ghBranchEl.value.trim() || 'main';
-  if(!user || !repo){ alert('Preencha GitHub user e Repositório.'); return; }
-
-  const sel = document.getElementById('ghSelect');
-  sel.innerHTML = '';
-  const url = `https://api.github.com/repos/${user}/${repo}/contents/versions?ref=${encodeURIComponent(branch)}`;
-  try {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error('Falha ao listar versões');
+// ---------- GitHub: carregar AUTOMÁTICO a última versão ----------
+async function autoLoadLatestFromGitHub(){
+  const listUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/versions?ref=${encodeURIComponent(GH_BRANCH)}`;
+  try{
+    const res = await fetch(listUrl);
+    if(!res.ok) return; // se pasta não existe ou repo privado, apenas ignore
     const data = await res.json();
-    const files = (Array.isArray(data) ? data : [])
-      .filter(f => f.type === 'file' && f.name.endsWith('.json'))
-      .sort((a,b) => b.name.localeCompare(a.name)); // por nome (timestamp desc)
+    const files = (Array.isArray(data)?data:[])
+      .filter(f => f.type==='file' && f.name.endsWith('.json'))
+      .sort((a,b)=> b.name.localeCompare(a.name)); // nomes com timestamp desc
+    if(!files.length) return;
 
-    if (!files.length) {
-      const opt = document.createElement('option');
-      opt.textContent = 'Nenhum arquivo .json em versions/';
-      opt.disabled = true; opt.selected = true;
-      sel.appendChild(opt);
-      return;
+    const fname = files[0].name;
+    const rawUrl = `https://raw.githubusercontent.com/${GH_USER}/${GH_REPO}/${encodeURIComponent(GH_BRANCH)}/versions/${fname}`;
+    const r2 = await fetch(rawUrl, { cache: 'no-store' });
+    if(!r2.ok) return;
+    const json = await r2.json();
+    if(Array.isArray(json?.racks)){
+      racks = json.racks;
+      activeTab = 0;
+      $('#rackSelect').value = '0';
+      save(); renderTabs(); renderGrid();
     }
-    files.forEach(f => {
-      const opt = document.createElement('option');
-      opt.value = f.name;
-      opt.textContent = f.name;
-      sel.appendChild(opt);
-    });
-    alert('Versões do GitHub carregadas!');
-  } catch (e) {
-    console.error(e);
-    alert('Erro ao listar versões do GitHub.\nVerifique user/repo/branch e se a pasta versions existe.');
+  }catch(e){
+    // silencioso para não atrapalhar o uso offline
+    console.warn('Auto-load GitHub falhou:', e);
   }
 }
-document.getElementById('ghListBtn').addEventListener('click', ghListVersions);
 
-// ---------- GitHub: CARREGAR versão selecionada (público) ----------
-async function ghLoadSelected() {
-  const user   = ghUserEl.value.trim();
-  const repo   = ghRepoEl.value.trim();
-  const branch = ghBranchEl.value.trim() || 'main';
-  const sel = document.getElementById('ghSelect');
-  const fname = sel.value;
-  if (!user || !repo){ alert('Preencha GitHub user e Repositório.'); return; }
-  if (!fname || fname.includes('Nenhum')) { alert('Selecione uma versão válida.'); return; }
-
-  const rawUrl = `https://raw.githubusercontent.com/${user}/${repo}/${encodeURIComponent(branch)}/versions/${fname}`;
-  try {
-    const res = await fetch(rawUrl, { cache: 'no-store' });
-    if (!res.ok) throw new Error('Falha ao baixar JSON');
-    const data = await res.json();
-    if (!Array.isArray(data?.racks)) { alert('JSON inválido.'); return; }
-    racks = data.racks;
-    activeTab = 0;
-    document.getElementById('rackSelect').value = '0';
-    save(); renderTabs(); renderGrid();
-    alert(`Carregado: ${fname}`);
-  } catch (e) {
-    console.error(e);
-    alert('Erro ao carregar a versão selecionada do GitHub.');
-  }
-}
-document.getElementById('ghLoadBtn').addEventListener('click', ghLoadSelected);
-
-// ---------- GitHub: CRIAR nova versão (requer PAT) ----------
+// ---------- GitHub: SALVAR nova versão (só token) ----------
 function timestampName(){
   const s = new Date().toISOString().replace(/[:T]/g,'-').split('.')[0];
-  return `rack-${s}.json`; // ex: rack-2025-09-11-15-02-33.json
+  return `rack-${s}.json`;
 }
 async function ghCreateVersionFile(){
-  const user   = ghUserEl.value.trim();
-  const repo   = ghRepoEl.value.trim();
-  const branch = ghBranchEl.value.trim() || 'main';
-  const token  = ghTokenEl.value.trim();
-
-  if(!user || !repo || !branch){ alert('Preencha user/repo/branch.'); return; }
-  if(!token){ alert('Cole o seu token (PAT).'); return; }
+  const token = $('#ghToken').value.trim();
+  if(!token){ alert('Cole o seu token (PAT) do GitHub.'); return; }
 
   const json = JSON.stringify({ racks }, null, 2);
-  const contentB64 = btoa(unescape(encodeURIComponent(json))); // base64 seguro para UTF-8
+  const contentB64 = btoa(unescape(encodeURIComponent(json)));
   const path = `versions/${timestampName()}`;
 
-  const url = `https://api.github.com/repos/${encodeURIComponent(user)}/${encodeURIComponent(repo)}/contents/${encodeURIComponent(path)}`;
-  const body = {
-    message: `feat: add version via site (${path})`,
-    content: contentB64,
-    branch
-  };
+  const url = `https://api.github.com/repos/${encodeURIComponent(GH_USER)}/${encodeURIComponent(GH_REPO)}/contents/${encodeURIComponent(path)}`;
+  const body = { message:`feat: add version via site (${path})`, content:contentB64, branch:GH_BRANCH };
 
   try{
     const res = await fetch(url, {
-      method: 'PUT',
-      headers: {
+      method:'PUT',
+      headers:{
         'Authorization': `Bearer ${token}`,
         'Accept': 'application/vnd.github+json'
       },
@@ -423,18 +292,17 @@ async function ghCreateVersionFile(){
     if(!res.ok){
       const t = await res.text();
       console.error('GitHub error:', t);
-      alert('Falha ao salvar no GitHub. Verifique token/permissões/branch.\nDetalhes no console.');
+      alert('Falha ao salvar no GitHub. Verifique o token e permissões (Contents: Read & write).');
       return;
     }
     const data = await res.json();
     alert(`Versão criada!\n${data.content.path}`);
-    if(typeof ghListVersions === 'function') ghListVersions();
   }catch(e){
     console.error(e);
     alert('Erro de rede ao salvar no GitHub.');
   }
 }
-document.getElementById('ghSaveNewBtn').addEventListener('click', ghCreateVersionFile);
+$('#ghSaveNewBtn').addEventListener('click', ghCreateVersionFile);
 
 // ---------- Init ----------
 load();
@@ -442,3 +310,4 @@ renderTabs();
 $('#rackSelect').value = String(activeTab);
 window.addEventListener('resize', renderGrid);
 renderGrid();
+autoLoadLatestFromGitHub(); // carrega sempre a versão mais recente ao abrir
