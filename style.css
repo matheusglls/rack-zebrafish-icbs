@@ -25,4 +25,55 @@ button:active{transform:translateY(1px)}
 .tab{flex:1;text-align:center;padding:10px;background:#0e131b;border:1px solid #253044;border-radius:10px;cursor:pointer;user-select:none;color:#cfe3ff}
 .tab.active{background:#0f1622;border-color:var(--accent);color:var(--accent)}
 .legend{display:flex;gap:12px;align-items:center;color:var(--muted);font-size:12px}
-.dot{wid
+.dot{width:12px;height:12px;border-radius:3px;display:inline-block}
+.dot-s{background:var(--s)} .dot-m{background:var(--m)} .dot-l{background:var(--l)}
+
+.grid{
+  --rows:5; --cols:10;
+  display:grid;
+  grid-template-columns: 40px repeat(var(--cols), 1fr); /* coluna 1 = labels A–E */
+  grid-template-rows: repeat(var(--rows), 1fr);
+  gap:6px;
+  border:1px dashed var(--grid);
+  border-radius:10px;
+  padding:8px;
+  background:linear-gradient(180deg,#121a27,#0f1520);
+  position:relative;
+  min-height:480px;
+}
+.rowLabel{
+  display:flex;align-items:center;justify-content:center;
+  background:#0e151f;border:1px solid #263347;border-radius:8px;color:#9fb3c8;font-weight:600
+}
+.slot{
+  background:var(--slot);
+  border:1px solid #24324a;
+  border-radius:8px;
+  cursor:crosshair;
+}
+.slot:hover{background:var(--slot-hover)}
+
+.tank{
+  position:absolute;
+  height: calc((100% - 6px*(var(--rows)+1)) / var(--rows)); /* altura 1 linha */
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  padding:6px 8px;border-radius:10px;border:2px solid #314664;
+  color:white; user-select:none; cursor:grab;
+  transition: box-shadow .12s, transform .06s;
+  background: linear-gradient(180deg, rgba(255,255,255,.1), rgba(255,255,255,.04));
+}
+.tank:active{cursor:grabbing}
+.tank[data-size="1"]{background-color:var(--s)}
+.tank[data-size="2"]{background-color:var(--m)}
+.tank[data-size="7"]{background-color:var(--l)}
+.tank .meta{font-size:12px}
+.tank .badge{font-weight:700;font-size:11px;padding:2px 8px;background:#0000003a;border:1px solid #0000004d;border-radius:999px}
+
+.ghost{opacity:.6;outline:2px dashed var(--accent)}
+
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;padding:16px;z-index:20}
+.modal.open{display:flex}
+.card{width:min(560px,92vw);background:#0f1622;border:1px solid #273349;border-radius:14px;padding:16px}
+.card h3{margin:0 0 10px}
+.grid-info{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.right-actions{margin-top:10px;display:flex;gap:8px;justify-content:flex-end}
