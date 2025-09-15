@@ -125,10 +125,13 @@ function renderGrid(){
     const {left, top, width, height} = rcToPx(t.row, t.col, t.w);
     Object.assign(div.style, { left:left+'px', top:top+'px', width:width+'px', height:height+'px' });
 
+    // mostra linhagem • N peixes • Data (se houver)
+    const infoLinha = `${t.linhagem||'-'} • ${t.n??'-'} peixes` + (t.dataChegada ? ` • ${t.dataChegada}` : '');
+
     div.innerHTML = `
       <div class="meta">
         <div><b>${t.label||`${rowIndexToLabel(t.row)}${t.col+1}`}</b></div>
-        <div class="sub">${t.linhagem||'-'} • ${t.n??'-'} peixes</div>
+        <div class="sub">${infoLinha}</div>
       </div>
       <div class="badge">${t.w}x</div>
     `;
@@ -152,7 +155,15 @@ function validSizes(tabIndex, rowIndex){
 function addTankAt(row, col){
   const allowed = validSizes(activeTab, row);
   if(!allowed.includes(placingSize)) return false;
-  const tank = { id: uid(), row, col, w: placingSize, label:'', linhagem:'', idade:null, n:null, notas:'', status:'ok', color:'' };
+
+  // >>> inclui dataChegada no objeto base
+  const tank = {
+    id: uid(), row, col, w: placingSize,
+    label:'', linhagem:'', idade:null, n:null, notas:'',
+    status:'ok', color:'',
+    dataChegada:'' // <-- NOVO
+  };
+
   if(!canPlace(activeTab, tank)) return false;
   racks[activeTab].tanks.push(tank);
   save(); renderGrid();
@@ -244,6 +255,8 @@ function openEditor(id){
   $('#f_notas').value = t.notas || '';
   $('#f_status').value = t.status || 'ok';
   $('#f_cor').value = t.color || '#1f6feb';
+  // >>> preencher Data de chegada
+  $('#f_data_chegada').value = t.dataChegada || '';
   $('#modal').classList.add('open');
   $('#modal').setAttribute('aria-hidden','false');
 }
@@ -257,6 +270,8 @@ function closeEditor(saveIt=true){
     t.notas = $('#f_notas').value.trim();
     t.status = $('#f_status').value;
     t.color = $('#f_cor').value;
+    // >>> salvar Data de chegada
+    t.dataChegada = $('#f_data_chegada').value || '';
   }
   editingId = null;
   $('#modal').classList.remove('open');
