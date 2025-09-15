@@ -1,0 +1,93 @@
+{
+  "racks": [
+    {
+      "tanks": [
+        {
+          "id": "u277c6l",
+          "row": 0,
+          "col": 0,
+          "w": 1,
+          "label": "",
+          "linhagem": "",
+          "idade": null,
+          "n": null,
+          "notas": "",
+          "status": "ok",
+          "color": ""
+        }
+      ]
+    },
+    {
+      "tanks": [
+        {
+          "id": "hjeke29",
+          "row": 0,
+          "col": 0,
+          "w": 1,
+          "label": "",
+          "linhagem": "",
+          "idade": null,
+          "n": null,
+          "notas": "",
+          "status": "ok",
+          "color": ""
+        },
+        {
+          "id": "r5pmfi0",
+          "row": 0,
+          "col": 1,
+          "w": 1,
+          "label": "",
+          "linhagem": "",
+          "idade": null,
+          "n": null,
+          "notas": "",
+          "status": "ok",
+          "color": ""
+        },
+        {
+          "id": "7guah9s",
+          "row": 0,
+          "col": 2,
+          "w": 1,
+          "label": "",
+          "linhagem": "",
+          "idade": null,
+          "n": null,
+          "notas": "",
+          "status": "ok",
+          "color": ""
+        },
+        {
+          "id": "75ieyto",
+          "row": 0,
+          "col": 3,
+          "w": 1,
+          "label": "",
+          "linhagem": "",
+          "idade": null,
+          "n": null,
+          "notas": "",
+          "status": "ok",
+          "color": ""
+        },
+        {
+          "id": "bfs56i8",
+          "row": 0,
+          "col": 4,
+          "w": 1,
+          "label": "",
+          "linhagem": "",
+          "idade": null,
+          "n": null,
+          "notas": "",
+          "status": "ok",
+          "color": ""
+        }
+      ]
+    },
+    {
+      "tanks": []
+    }
+  ]
+}
