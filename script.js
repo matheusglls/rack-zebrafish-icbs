@@ -126,7 +126,7 @@ function renderGrid(){
     Object.assign(div.style, { left:left+'px', top:top+'px', width:width+'px', height:height+'px' });
 
     // mostra linhagem • N peixes • Data (se houver)
-    const infoLinha = `${t.linhagem||'-'} • ${t.n??'-'} peixes` + (t.dataChegada ? ` • ${t.dataChegada}` : '');
+    const infoLinha = `${t.linhagem||'-'} • ${t.idade??'-'} peixes` + (t.dataChegada ? ` • ${t.dataChegada}` : '');
 
     div.innerHTML = `
       <div class="meta">
