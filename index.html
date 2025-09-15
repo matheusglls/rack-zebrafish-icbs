@@ -83,23 +83,38 @@
 <div id="modal" class="modal" aria-hidden="true">
   <div class="card" role="dialog" aria-modal="true" aria-labelledby="dlgTitle">
     <h3 id="dlgTitle">Editar aquário</h3>
+
     <div class="grid-info">
-      <div><label>Responsável</label><input id="f_label" type="text" placeholder="ex: Jane Doe" /></div>
-      <div><label>Origem</label><input id="f_linhagem" type="text" placeholder="ex: Delphis" /></div>
-      <div><label>Quantidade</label><input id="f_idade" type="number" min="0" step="1" /></div>
-      <div><label>Mortes</label><input id="f_n" type="number" min="0" step="1" /></div>
-      <div style="grid-column:1/-1"><label>Notas</label><input id="f_notas" type="text" placeholder="Observações…" /></div>
-      <div><label>Status</label>
-        <select id="f_status"><option value="ok">OK</option><option value="quarentena">Quarentena</option><option value="manutenção">Manutenção</option></select>
+      <div><label for="f_label">Responsável</label><input id="f_label" type="text" placeholder="ex: Jane Doe" /></div>
+      <div><label for="f_linhagem">Origem</label><input id="f_linhagem" type="text" placeholder="ex: Delphis" /></div>
+      <div><label for="f_idade">Quantidade</label><input id="f_idade" type="number" min="0" step="1" /></div>
+      <div><label for="f_n">Mortes</label><input id="f_n" type="number" min="0" step="1" /></div>
+
+      <!-- NOVO CAMPO -->
+      <div>
+        <label for="f_data_chegada">Data de chegada</label>
+        <input id="f_data_chegada" type="date" />
       </div>
-      <div><label>Cor (opcional)</label><input id="f_cor" type="color" /></div>
+
+      <div style="grid-column:1/-1"><label for="f_notas">Notas</label><input id="f_notas" type="text" placeholder="Observações…" /></div>
+      <div>
+        <label for="f_status">Status</label>
+        <select id="f_status">
+          <option value="ok">OK</option>
+          <option value="quarentena">Quarentena</option>
+          <option value="manutenção">Manutenção</option>
+        </select>
+      </div>
+      <div><label for="f_cor">Cor (opcional)</label><input id="f_cor" type="color" /></div>
     </div>
+
     <div class="right-actions">
       <button id="deleteBtn" class="danger">Remover</button>
       <button id="closeBtn">Salvar e fechar</button>
     </div>
   </div>
 </div>
+
 
 <script src="script.js"></script>
 </body>
