@@ -108,3 +108,13 @@ h1{margin:0;font-size:20px;color:#cde1ff}
 .grid-info{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
 .grid-info input, .grid-info select{width:100%;padding:8px;border-radius:8px;border:1px solid var(--border);background:#0e1827;color:var(--text)}
 .right-actions{display:flex;gap:8px;margin-top:12px;justify-content:flex-end}
+
+/* garante que a janela de edição fique acima dos tanques */
+.modal {
+  z-index: 2000;
+}
+
+.tank {
+  z-index: 1000; /* tanques acima da grade, mas abaixo do modal */
+}
+
