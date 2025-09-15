@@ -24,18 +24,18 @@
 
     <label for="size">Tamanho</label>
     <select id="size" aria-label="Selecionar tamanho de aquário">
-      <!-- para rack 2 linha A -->
+      <!-- Específicos da Rack 2 / Linha A -->
       <option value="1" data-scope="rack2A">1,1 L (1 slot)</option>
       <option value="2" data-scope="rack2A">2,4 L (2 slots)</option>
 
-      <!-- para demais linhas -->
+      <!-- Demais linhas -->
       <option value="1" data-scope="default">3,5 L (1 slot)</option>
       <option value="2" data-scope="default">8,0 L (2 slots)</option>
       <option value="7" data-scope="default">Outro (7 slots)</option>
     </select>
 
     <p class="help">
-      Dica: escolha o tamanho e <b>clique</b> em um slot da rack para adicionar.
+      Dica: escolha o tamanho e <b>clique</b> em um slot para adicionar.
       Arraste para mover. Clique no aquário para editar dados.
     </p>
 
@@ -67,12 +67,14 @@
       <button class="tab" data-tab="2" role="tab" aria-selected="false">Rack 3</button>
     </div>
 
+    <!-- legenda -->
     <div class="legend">
       <span><i class="dot dot-s"></i> 1 slot</span>
       <span><i class="dot dot-m"></i> 2 slots</span>
       <span><i class="dot dot-l"></i> 7 slots</span>
     </div>
 
+    <!-- A grade é preenchida via JS com 5 linhas independentes -->
     <div id="rackGrid" class="grid" role="grid" aria-label="Rack virtual"></div>
   </main>
 </div>
