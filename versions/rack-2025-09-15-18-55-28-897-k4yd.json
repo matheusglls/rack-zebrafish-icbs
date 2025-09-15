@@ -1,0 +1,28 @@
+{
+  "racks": [
+    {
+      "tanks": []
+    },
+    {
+      "tanks": []
+    },
+    {
+      "tanks": [
+        {
+          "id": "dluw1i1",
+          "row": 1,
+          "col": 0,
+          "w": 2,
+          "label": "Leo",
+          "linhagem": "Delphis",
+          "idade": 50,
+          "n": null,
+          "notas": "",
+          "status": "ok",
+          "color": "#1f6feb",
+          "dataChegada": "2025-08-29"
+        }
+      ]
+    }
+  ]
+}
