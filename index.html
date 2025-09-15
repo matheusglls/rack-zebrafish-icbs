@@ -24,9 +24,14 @@
 
     <label for="size">Tamanho</label>
     <select id="size" aria-label="Selecionar tamanho de aquário">
-      <option value="1">Pequeno (1 slot)</option>
-      <option value="2">Médio (2 slots)</option>
-      <option value="7">Grande (7 slots)</option>
+      <!-- para rack 2 linha A -->
+      <option value="1" data-scope="rack2A">1,1 L (1 slot)</option>
+      <option value="2" data-scope="rack2A">2,4 L (2 slots)</option>
+
+      <!-- para demais linhas -->
+      <option value="1" data-scope="default">3,5 L (1 slot)</option>
+      <option value="2" data-scope="default">8,0 L (2 slots)</option>
+      <option value="7" data-scope="default">Outro (7 slots)</option>
     </select>
 
     <p class="help">
@@ -36,7 +41,6 @@
 
     <hr>
 
-    <!-- ===== Salvar com senha (via Worker) ===== -->
     <h2>Salvar na nuvem</h2>
     <p class="help">Cria versões em <code>versions/</code> no GitHub (via seu Worker).</p>
 
@@ -49,7 +53,6 @@
 
     <hr>
 
-    <!-- ===== Zerar tudo ===== -->
     <div class="row">
       <button id="resetBtn" class="danger">Zerar tudo</button>
     </div>
@@ -64,82 +67,13 @@
       <button class="tab" data-tab="2" role="tab" aria-selected="false">Rack 3</button>
     </div>
 
-    <!-- legenda -->
     <div class="legend">
       <span><i class="dot dot-s"></i> 1 slot</span>
       <span><i class="dot dot-m"></i> 2 slots</span>
       <span><i class="dot dot-l"></i> 7 slots</span>
     </div>
 
-    <!-- grade fixa: 5 níveis (A–E) x 10 slots -->
-    <div id="rackGrid" class="grid" role="grid" aria-label="Rack virtual (5 níveis x 10 slots)">
-      <!-- labels laterais A–E -->
-      <div class="rowLabel" style="grid-row:1;grid-column:1">A</div>
-      <div class="rowLabel" style="grid-row:2;grid-column:1">B</div>
-      <div class="rowLabel" style="grid-row:3;grid-column:1">C</div>
-      <div class="rowLabel" style="grid-row:4;grid-column:1">D</div>
-      <div class="rowLabel" style="grid-row:5;grid-column:1">E</div>
-
-      <!-- slots A -->
-      <div class="slot" data-row="0" data-col="0" style="grid-row:1;grid-column:2"></div>
-      <div class="slot" data-row="0" data-col="1" style="grid-row:1;grid-column:3"></div>
-      <div class="slot" data-row="0" data-col="2" style="grid-row:1;grid-column:4"></div>
-      <div class="slot" data-row="0" data-col="3" style="grid-row:1;grid-column:5"></div>
-      <div class="slot" data-row="0" data-col="4" style="grid-row:1;grid-column:6"></div>
-      <div class="slot" data-row="0" data-col="5" style="grid-row:1;grid-column:7"></div>
-      <div class="slot" data-row="0" data-col="6" style="grid-row:1;grid-column:8"></div>
-      <div class="slot" data-row="0" data-col="7" style="grid-row:1;grid-column:9"></div>
-      <div class="slot" data-row="0" data-col="8" style="grid-row:1;grid-column:10"></div>
-      <div class="slot" data-row="0" data-col="9" style="grid-row:1;grid-column:11"></div>
-
-      <!-- slots B -->
-      <div class="slot" data-row="1" data-col="0" style="grid-row:2;grid-column:2"></div>
-      <div class="slot" data-row="1" data-col="1" style="grid-row:2;grid-column:3"></div>
-      <div class="slot" data-row="1" data-col="2" style="grid-row:2;grid-column:4"></div>
-      <div class="slot" data-row="1" data-col="3" style="grid-row:2;grid-column:5"></div>
-      <div class="slot" data-row="1" data-col="4" style="grid-row:2;grid-column:6"></div>
-      <div class="slot" data-row="1" data-col="5" style="grid-row:2;grid-column:7"></div>
-      <div class="slot" data-row="1" data-col="6" style="grid-row:2;grid-column:8"></div>
-      <div class="slot" data-row="1" data-col="7" style="grid-row:2;grid-column:9"></div>
-      <div class="slot" data-row="1" data-col="8" style="grid-row:2;grid-column:10"></div>
-      <div class="slot" data-row="1" data-col="9" style="grid-row:2;grid-column:11"></div>
-
-      <!-- slots C -->
-      <div class="slot" data-row="2" data-col="0" style="grid-row:3;grid-column:2"></div>
-      <div class="slot" data-row="2" data-col="1" style="grid-row:3;grid-column:3"></div>
-      <div class="slot" data-row="2" data-col="2" style="grid-row:3;grid-column:4"></div>
-      <div class="slot" data-row="2" data-col="3" style="grid-row:3;grid-column:5"></div>
-      <div class="slot" data-row="2" data-col="4" style="grid-row:3;grid-column:6"></div>
-      <div class="slot" data-row="2" data-col="5" style="grid-row:3;grid-column:7"></div>
-      <div class="slot" data-row="2" data-col="6" style="grid-row:3;grid-column:8"></div>
-      <div class="slot" data-row="2" data-col="7" style="grid-row:3;grid-column:9"></div>
-      <div class="slot" data-row="2" data-col="8" style="grid-row:3;grid-column:10"></div>
-      <div class="slot" data-row="2" data-col="9" style="grid-row:3;grid-column:11"></div>
-
-      <!-- slots D -->
-      <div class="slot" data-row="3" data-col="0" style="grid-row:4;grid-column:2"></div>
-      <div class="slot" data-row="3" data-col="1" style="grid-row:4;grid-column:3"></div>
-      <div class="slot" data-row="3" data-col="2" style="grid-row:4;grid-column:4"></div>
-      <div class="slot" data-row="3" data-col="3" style="grid-row:4;grid-column:5"></div>
-      <div class="slot" data-row="3" data-col="4" style="grid-row:4;grid-column:6"></div>
-      <div class="slot" data-row="3" data-col="5" style="grid-row:4;grid-column:7"></div>
-      <div class="slot" data-row="3" data-col="6" style="grid-row:4;grid-column:8"></div>
-      <div class="slot" data-row="3" data-col="7" style="grid-row:4;grid-column:9"></div>
-      <div class="slot" data-row="3" data-col="8" style="grid-row:4;grid-column:10"></div>
-      <div class="slot" data-row="3" data-col="9" style="grid-row:4;grid-column:11"></div>
-
-      <!-- slots E -->
-      <div class="slot" data-row="4" data-col="0" style="grid-row:5;grid-column:2"></div>
-      <div class="slot" data-row="4" data-col="1" style="grid-row:5;grid-column:3"></div>
-      <div class="slot" data-row="4" data-col="2" style="grid-row:5;grid-column:4"></div>
-      <div class="slot" data-row="4" data-col="3" style="grid-row:5;grid-column:5"></div>
-      <div class="slot" data-row="4" data-col="4" style="grid-row:5;grid-column:6"></div>
-      <div class="slot" data-row="4" data-col="5" style="grid-row:5;grid-column:7"></div>
-      <div class="slot" data-row="4" data-col="6" style="grid-row:5;grid-column:8"></div>
-      <div class="slot" data-row="4" data-col="7" style="grid-row:5;grid-column:9"></div>
-      <div class="slot" data-row="4" data-col="8" style="grid-row:5;grid-column:10"></div>
-      <div class="slot" data-row="4" data-col="9" style="grid-row:5;grid-column:11"></div>
-    </div>
+    <div id="rackGrid" class="grid" role="grid" aria-label="Rack virtual"></div>
   </main>
 </div>
 
