@@ -1,0 +1,42 @@
+{
+  "racks": [
+    {
+      "tanks": []
+    },
+    {
+      "tanks": []
+    },
+    {
+      "tanks": [
+        {
+          "id": "dluw1i1",
+          "row": 1,
+          "col": 0,
+          "w": 2,
+          "label": "Leo",
+          "linhagem": "Delphis",
+          "idade": 50,
+          "n": null,
+          "notas": "",
+          "status": "ok",
+          "color": "#1f6feb",
+          "dataChegada": "2025-08-29"
+        },
+        {
+          "id": "9ctbtm5",
+          "row": 2,
+          "col": 0,
+          "w": 1,
+          "label": "Francisco",
+          "linhagem": "Delphis",
+          "idade": 20,
+          "n": null,
+          "notas": "",
+          "status": "ok",
+          "color": "#1f6feb",
+          "dataChegada": "2025-09-11"
+        }
+      ]
+    }
+  ]
+}
