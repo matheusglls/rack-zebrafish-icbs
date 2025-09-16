@@ -36,19 +36,18 @@ function colsFor(tabIndex, rowIndex){
 
 // ---------- Geometria ----------
 function rcToPx(row, col, w){
-  // calcula usando a grade da PRÓPRIA linha
   const rowGrid = gridEl.querySelector(`.rowGrid[data-row="${row}"]`);
+  const gridRect = gridEl.getBoundingClientRect();
   const rect = rowGrid.getBoundingClientRect();
   const styles = getComputedStyle(rowGrid);
   const gap = parseFloat(styles.gap) || 6;
 
   const cols = colsFor(activeTab, row);
-  // largura de uma célula considerando gaps internos da rowGrid
   const cw = (rect.width - gap*(cols-1)) / cols;
   const ch = rect.height;
 
-  const left = rect.left + col * (cw + gap);
-  const top  = rect.top;
+  const left = (rect.left - gridRect.left) + col * (cw + gap);
+  const top  = (rect.top  - gridRect.top);
 
   const width = w * cw + (w-1)*gap;
   const height = ch;
@@ -141,7 +140,7 @@ function renderGrid(){
     div.addEventListener('click', e => { if(!dragMoved) openEditor(t.id); });
     div.addEventListener('dblclick', e => openEditor(t.id));
 
-    document.body.appendChild(div);
+    gridEl.appendChild(div);
   }
 }
 
@@ -197,15 +196,21 @@ function onDragMove(ev){
   const t = racks[activeTab].tanks.find(x=>x.id===drag.id);
   if(!t) return;
 
-  const x = ('touches' in ev ? ev.touches[0].clientX : ev.clientX) - drag.offX;
-  const y = ('touches' in ev ? ev.touches[0].clientY : ev.clientY) - drag.offY;
+  const clientX = ('touches' in ev ? ev.touches[0].clientX : ev.clientX);
+  const clientY = ('touches' in ev ? ev.touches[0].clientY : ev.clientY);
+
+  const gridRect = gridEl.getBoundingClientRect();
+
+  // pointer position relative to the grid
+  const x = clientX - drag.offX - gridRect.left;
+  const y = clientY - drag.offY - gridRect.top;
 
   let bestRow = t.row, bestCol = t.col, bestOk = false;
 
   for(let r=0;r<ROWS;r++){
     const colsR = colsFor(activeTab, r);
     for(let c=0;c<=colsR - t.w;c++){
-      const box = rcToPx(r,c,t.w);
+      const box = rcToPx(r,c,t.w); // grid-relative box
       const inside = (x >= box.left-12 && x <= box.left+box.width+12 &&
                       y >= box.top-12  && y <= box.top+box.height+12);
       if(inside){
@@ -220,7 +225,9 @@ function onDragMove(ev){
   if(bestOk){
     const {left, top, width, height} = rcToPx(bestRow, bestCol, t.w);
     elTank.classList.remove('ghost');
-    Object.assign(elTank.style, { left:left+'px', top:top+'px', width:width+'px', height:height+'px' });
+    Object.assign(elTank.style, {
+      left:left+'px', top:top+'px', width:width+'px', height:height+'px'
+    });
     drag.ok = true; drag.row = bestRow; drag.col = bestCol;
   }else{
     elTank.classList.add('ghost');
