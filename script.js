@@ -106,10 +106,43 @@ function renderGrid(){
       rowGrid.appendChild(slot);
     }
 
-    rowWrap.appendChild(label);
+      rowWrap.appendChild(label);
     rowWrap.appendChild(rowGrid);
     gridEl.appendChild(rowWrap);
   }
+
+  // números 1 a 10 abaixo da estante
+  const columnLabelsWrap = document.createElement('div');
+  columnLabelsWrap.className = 'columnLabelsWrap';
+
+  // espaço vazio abaixo das letras A, B, C, D e E
+  const columnLabelsSpacer = document.createElement('div');
+  columnLabelsSpacer.className = 'columnLabelsSpacer';
+  columnLabelsSpacer.setAttribute('aria-hidden', 'true');
+
+  // área que receberá as 10 caixinhas
+  const columnLabels = document.createElement('div');
+  columnLabels.className = 'columnLabels';
+  columnLabels.setAttribute('aria-label', 'Números das colunas');
+
+  // cria os números 1, 2, 3... até 10
+  for(let c = 1; c <= 10; c++){
+    const columnLabel = document.createElement('div');
+
+    columnLabel.className = 'columnLabel';
+    columnLabel.setAttribute('role', 'columnheader');
+    columnLabel.setAttribute('aria-label', `Coluna ${c}`);
+    columnLabel.textContent = String(c);
+
+    columnLabels.appendChild(columnLabel);
+  }
+
+  // coloca os números dentro da linha inferior
+  columnLabelsWrap.appendChild(columnLabelsSpacer);
+  columnLabelsWrap.appendChild(columnLabels);
+
+  // coloca a linha inferior dentro da estante
+  gridEl.appendChild(columnLabelsWrap);
 
   // tanques (absolutos por cima)
   document.querySelectorAll('.tank').forEach(n=>n.remove());
