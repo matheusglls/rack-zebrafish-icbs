@@ -42,9 +42,15 @@ h1{margin:0;font-size:20px;color:#cde1ff}
 .grid{
   position:relative;
   display:grid;
-  grid-template-rows: repeat(5, 1fr);
+
+  /* 5 linhas de aquários + 1 linha pequena para os números */
+  grid-template-rows: repeat(5, minmax(0, 1fr)) var(--labelW);
+
   gap: var(--gap);
-  height: 600px;
+
+  /* aumenta a altura para caberem os números */
+  height: calc(600px + var(--labelW) + var(--gap));
+
   padding: 8px;
   border:1px dashed #27354a;
   border-radius:10px;
@@ -59,12 +65,32 @@ h1{margin:0;font-size:20px;color:#cde1ff}
   align-items:stretch;
   min-height: 0;
 }
-.rowLabel{
-  display:flex;align-items:center;justify-content:center;
-  color:#bcd6ff;background:#0d1727;border:1px solid var(--border);
-  border-radius:10px;font-weight:600;
+.rowLabel,
+.columnLabel{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#bcd6ff;
+  background:#0d1727;
+  border:1px solid var(--border);
+  border-radius:10px;
+  font-weight:600;
 }
 
+/* linha que fica embaixo da estante */
+.columnLabelsWrap{
+  display:grid;
+  grid-template-columns: var(--labelW) 1fr;
+  gap: var(--gap);
+  min-height:0;
+}
+
+/* divide a linha inferior em 10 partes iguais */
+.columnLabels{
+  display:grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: var(--gap);
+}
 /* grid interna da linha, com colunas independentes */
 .rowGrid{
   display:grid;
